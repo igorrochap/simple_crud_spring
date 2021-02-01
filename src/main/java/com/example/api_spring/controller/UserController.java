@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -37,17 +38,38 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto show(@PathVariable Long id){
-        User user = userRepository.getOne(id);
+    public ResponseEntity<UserDto> show(@PathVariable Long id){
+        Optional<User> user = userRepository.findById(id);
 
-        return new UserDto(user);
+        if(user.isPresent()) {
+            return ResponseEntity.ok(new UserDto(user.get()));
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody UserForm form){
-        User user = form.update(id, userRepository);
+        Optional<User> optional = userRepository.findById(id);
 
-        return ResponseEntity.ok(new UserDto(user));
+        if(optional.isPresent()) {
+            User user = form.update(id, userRepository);
+            return ResponseEntity.ok(new UserDto(user));
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remove(@PathVariable Long id){
+        Optional<User> optional = userRepository.findById(id);
+
+        if(optional.isPresent()) {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
