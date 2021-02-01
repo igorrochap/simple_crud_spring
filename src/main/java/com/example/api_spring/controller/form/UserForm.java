@@ -1,19 +1,33 @@
 package com.example.api_spring.controller.form;
 
 import com.example.api_spring.model.User;
+import com.example.api_spring.repository.UserRepository;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class UserForm {
     private String name;
-    private Date bornDate;
+    private LocalDate bornDate;
     private char sex;
     private String cpf;
     private String document;
 
     public User convert(){
         return new User(name, bornDate, sex, cpf, document);
+    }
+
+    public User update(Long id, UserRepository userRepository){
+        User user = userRepository.getOne(id);
+
+        user.setName(this.name);
+        user.setBornDate(this.bornDate);
+        user.setSex(this.sex);
+        user.setCpf(this.cpf);
+        user.setDocument(this.document);
+
+        return user;
     }
 
     public String getName() {
@@ -29,7 +43,7 @@ public class UserForm {
         return sdf.format(bornDate);
     }
 
-    public void setBornDate(Date bornDate) {
+    public void setBornDate(LocalDate bornDate) {
         this.bornDate = bornDate;
     }
 

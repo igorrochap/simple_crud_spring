@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -13,14 +14,14 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    private Date bornDate;
+    private LocalDate bornDate;
     private char sex;
     private String cpf;
     private String document;
 
     public User(){ }
 
-    public User(String name, Date bornDate, char sex, String cpf, String document) {
+    public User(String name, LocalDate bornDate, char sex, String cpf, String document) {
         this.name = name;
         this.bornDate = bornDate;
         this.sex = sex;
@@ -47,15 +48,17 @@ public class User {
     }
 
     public void setName(String name) {
+        System.out.println(name);
         this.name = name;
     }
 
-    public String getBornDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        return sdf.format(bornDate);
+    public LocalDate getBornDate() {
+        //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        //return sdf.format(bornDate);
+        return bornDate;
     }
 
-    public void setBornDate(Date bornDate) {
+    public void setBornDate(LocalDate bornDate) {
         this.bornDate = bornDate;
     }
 
